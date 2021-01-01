@@ -1,0 +1,40 @@
+swagger: "2.0"
+paths:
+  /zundokos:
+    get:
+      tags:
+      - zundoko
+      operationId: getZundokos
+      responses:
+        200:
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Zundoko"
+definitions:
+  Zundoko:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      saidAt:
+        type: string
+        format: date-time
+      word:
+        type: string
+        enum:
+        - Zun
+        - Doko
+  Kiyoshi:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      saidAt:
+        type: string
+        format: date-time
+      madeBy:
+        type: string
+        format: email

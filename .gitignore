@@ -1,0 +1,8 @@
+*.coverprofile
+.vscode
+vendor/
+bin/
+
+pkg/model/
+server.pid
+mock/

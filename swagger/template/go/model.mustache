@@ -1,0 +1,79 @@
+{{>partial_header}}
+package {{packageName}}
+
+import (
+	"encoding/json"
+	"fmt"
+	"io"
+	"io/ioutil"
+)
+{{#models}}{{#imports}}
+import ({{/imports}}{{#imports}}
+	"{{import}}"{{/imports}}{{#imports}}
+)
+{{/imports}}{{#model}}{{#isEnum}}{{#description}}// {{{classname}}} : {{{description}}}{{/description}}
+type {{{classname}}} {{^format}}{{dataType}}{{/format}}{{#format}}{{{format}}}{{/format}}
+
+// List of {{{name}}}
+const (
+	{{#allowableValues}}
+	{{#enumVars}}
+	{{^-first}}
+	{{/-first}}
+	{{name}}_{{{classname}}} {{{classname}}} = "{{{value}}}"
+	{{/enumVars}}
+	{{/allowableValues}}
+){{/isEnum}}{{^isEnum}}{{#description}}
+// {{{description}}}{{/description}}
+type {{classname}} struct {
+{{#vars}}
+{{^-first}}
+{{/-first}}
+{{#description}}
+	// {{{description}}}
+{{/description}}
+	{{name}} {{^isEnum}}{{^isPrimitiveType}}{{^isContainer}}{{^isDateTime}}*{{/isDateTime}}{{/isContainer}}{{/isPrimitiveType}}{{/isEnum}}{{{datatype}}} `json:"{{baseName}}{{^required}},omitempty{{/required}}"{{#withXml}} xml:"{{baseName}}"{{/withXml}}`
+{{/vars}}
+}{{/isEnum}}{{/model}}{{/models}}
+
+// {{classname}}Decoder decodes REST API response body.
+type {{classname}}Decoder interface {
+	// DecodeList reads and decodes REST API response body, and returns a {{classname}}.
+	Decode(bodyReader io.Reader) (*{{classname}}, error)
+
+	// DecodeList reads and decodes REST API response body, and returns a list of {{classname}}.
+	DecodeList(bodyReader io.Reader) ([]{{classname}}, error)
+}
+
+// New{{classname}}Decoder creates a new {{classname}}Decoder instance.
+func New{{classname}}Decoder() {{classname}}Decoder {
+	return &impl{{classname}}Decoder{}
+}
+
+type impl{{classname}}Decoder struct {}
+
+func (d *impl{{classname}}Decoder) Decode(bodyReader io.Reader) (*{{classname}}, error) {
+	body, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body for {{classname}}: %w", err)
+	}
+
+	var model {{classname}}
+	if err := json.Unmarshal(body, &model); err != nil {
+		return nil, fmt.Errorf("failed to decode response body into {{classname}}: %w", err)
+	}
+	return &model, nil
+}
+
+func (d *impl{{classname}}Decoder) DecodeList(bodyReader io.Reader) ([]{{classname}}, error) {
+	body, err := ioutil.ReadAll(bodyReader)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read response body for {{classname}}: %w", err)
+	}
+
+	var models []{{classname}}
+	if err := json.Unmarshal(body, &models); err != nil {
+		return nil, fmt.Errorf("failed to decode response body into []{{classname}}: %w", err)
+	}
+	return models, nil
+}
