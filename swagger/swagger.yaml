@@ -1,4 +1,7 @@
 swagger: "2.0"
+info:
+  title: Zundoko Kiyoshi API
+  version: "1.0"
 paths:
   /zundokos:
     get:
@@ -7,6 +10,7 @@ paths:
       operationId: getZundokos
       responses:
         200:
+          description: dummy
           schema:
             type: array
             items:
