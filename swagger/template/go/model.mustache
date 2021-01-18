@@ -1,4 +1,3 @@
-{{>partial_header}}
 package {{packageName}}
 
 import (
@@ -7,33 +6,46 @@ import (
 	"io"
 	"io/ioutil"
 )
-{{#models}}{{#imports}}
-import ({{/imports}}{{#imports}}
-	"{{import}}"{{/imports}}{{#imports}}
+{{#models}}
+{{#imports}}
+{{#@first}}
+import (
+{{/@first}}
+	"{{import}}"
+{{#@last}}
 )
-{{/imports}}{{#model}}{{#isEnum}}{{#description}}// {{{classname}}} : {{{description}}}{{/description}}
+{{/@last}}
+{{/imports}}
+{{#model}}{{#isEnum}}{{#description}}// {{{classname}}} : {{{description}}}{{/description}}
 type {{{classname}}} {{^format}}{{dataType}}{{/format}}{{#format}}{{{format}}}{{/format}}
 
 // List of {{{name}}}
 const (
 	{{#allowableValues}}
 	{{#enumVars}}
-	{{^-first}}
-	{{/-first}}
+	{{^@first}}
+	{{/@first}}
 	{{name}}_{{{classname}}} {{{classname}}} = "{{{value}}}"
 	{{/enumVars}}
 	{{/allowableValues}}
 ){{/isEnum}}{{^isEnum}}{{#description}}
 // {{{description}}}{{/description}}
 type {{classname}} struct {
+{{#isComposedModel}}
+    {{#interfaceModels}}
+    {{classname}}
+    {{/interfaceModels}}
+{{/isComposedModel}}
+{{^isComposedModel}}
 {{#vars}}
-{{^-first}}
-{{/-first}}
+{{^@first}}
+{{/@first}}
 {{#description}}
 	// {{{description}}}
 {{/description}}
 	{{name}} {{^isEnum}}{{^isPrimitiveType}}{{^isContainer}}{{^isDateTime}}*{{/isDateTime}}{{/isContainer}}{{/isPrimitiveType}}{{/isEnum}}{{{datatype}}} `json:"{{baseName}}{{^required}},omitempty{{/required}}"{{#withXml}} xml:"{{baseName}}"{{/withXml}}`
 {{/vars}}
+{{/isComposedModel}}
 }{{/isEnum}}{{/model}}{{/models}}
 
 // {{classname}}Decoder decodes REST API response body.

@@ -1,7 +1,9 @@
-swagger: "2.0"
+openapi: 3.0.1
 info:
   title: Zundoko Kiyoshi API
   version: "1.0"
+servers:
+- url: /
 paths:
   /zundokos:
     get:
@@ -11,34 +13,37 @@ paths:
       responses:
         200:
           description: dummy
-          schema:
-            type: array
-            items:
-              $ref: "#/definitions/Zundoko"
-definitions:
-  Zundoko:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      saidAt:
-        type: string
-        format: date-time
-      word:
-        type: string
-        enum:
-        - Zun
-        - Doko
-  Kiyoshi:
-    type: object
-    properties:
-      id:
-        type: string
-        format: uuid
-      saidAt:
-        type: string
-        format: date-time
-      madeBy:
-        type: string
-        format: email
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Zundoko'
+components:
+  schemas:
+    Zundoko:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        saidAt:
+          type: string
+          format: date-time
+        word:
+          type: string
+          enum:
+          - Zun
+          - Doko
+    Kiyoshi:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        saidAt:
+          type: string
+          format: date-time
+        madeBy:
+          type: string
+          format: email

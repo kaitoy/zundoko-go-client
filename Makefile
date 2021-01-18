@@ -4,7 +4,7 @@ ifeq (,$(wildcard ./bin/swagger-codegen-cli.jar))
 	@{ \
 	set -e ;\
 	mkdir -p bin ;\
-	curl -sSLo ./bin/swagger-codegen-cli.jar https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.9/swagger-codegen-cli-2.4.9.jar ;\
+	curl -sSLo ./bin/swagger-codegen-cli.jar https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.24/swagger-codegen-cli-3.0.24.jar ;\
 	}
 endif
 
